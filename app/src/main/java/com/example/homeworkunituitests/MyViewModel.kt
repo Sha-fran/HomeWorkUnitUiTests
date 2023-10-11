@@ -7,7 +7,6 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
@@ -19,19 +18,13 @@ class MyViewModel @Inject constructor(val repo:Repository):ViewModel() {
         _uiState.value = UiState.Processing
 
         viewModelScope.launch(Dispatchers.IO) {
-            withContext(Dispatchers.IO) {
-                try {
-                    val bitcoinResponse = repo.getCurrencyByName("bitcoin")
+            val bitcoinResponse = repo.getCurrencyByName()
 
-                    if (bitcoinResponse.isSuccessful) {
-                        val data = bitcoinResponse.body()?.data
-                        _uiState.postValue(UiState.Result("${data?.id} ${data?.rateUsd}\n"))
-                    } else {
-                        _uiState.postValue(UiState.Error("Error code ${bitcoinResponse.code()}"))
-                    }
-                } catch (e: Exception) {
-                    _uiState.postValue(e.localizedMessage?.let { UiState.Error(it) })
-                }
+            if (bitcoinResponse.data != null) {
+                val data = bitcoinResponse.data
+                _uiState.postValue(UiState.Result(data.rateUsd))
+            } else {
+                _uiState.postValue(UiState.Error("Error"))
             }
         }
     }
@@ -39,7 +32,7 @@ class MyViewModel @Inject constructor(val repo:Repository):ViewModel() {
     sealed class UiState {
         object Empty:UiState()
         object Processing:UiState()
-        class Result(val title:String):UiState()
+        class Result(val bitcoinResult:String):UiState()
         class Error(val description:String):UiState()
     }
 }

@@ -25,10 +25,10 @@ class MainActivity : AppCompatActivity() {
 
         viewModel.uiState.observe(this) { uiState ->
             when (uiState) {
-                is MyViewModel.UiState.Empty -> result.text = ""
-                is MyViewModel.UiState.Processing -> result.text = "Processing..."
-                is MyViewModel.UiState.Result -> result.text = uiState.title
-                is MyViewModel.UiState.Error -> result.text = "Error!"
+                is MyViewModel.UiState.Empty -> result.text = getString(R.string.press_button)
+                is MyViewModel.UiState.Processing -> result.text = getString(R.string.processing)
+                is MyViewModel.UiState.Result -> result.text = uiState.bitcoinResult
+                is MyViewModel.UiState.Error -> result.text = getString(R.string.eror)
             }
         }
     }

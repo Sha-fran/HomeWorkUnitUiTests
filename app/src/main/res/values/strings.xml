@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">DependencyInjections</string>
     <string name="get_currency">GET CURRENCY</string>
+    <string name="press_button">Press button</string>
+    <string name="processing">Processing…</string>
+    <string name="eror">Error…</string>
 </resources>
